@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parking Fee Calculator</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffffff" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input[type="number"], input[type="date"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+    input[type="checkbox"] {
+      margin-top: 10px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      text-align: left;
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h2>Parking Contract Calculator</h2>
+  <label for="monthlyRate">Monthly Rate ($):</label>
+  <input type="number" id="monthlyRate" step="0.01" />
+
+  <label for="startDate">Start Date:</label>
+  <input type="date" id="startDate" />
+
+  <label>
+    <input type="checkbox" id="oversized" /> Oversized Vehicle (+$84.48)
+  </label>
+
+  <button onclick="calculateTotal()">Calculate</button>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    function calculateTotal() {
+      let monthlyRate = parseFloat(document.getElementById("monthlyRate").value);
+      const startDate = new Date(document.getElementById("startDate").value);
+      const isOversized = document.getElementById("oversized").checked;
+
+      if (isNaN(monthlyRate) || isNaN(startDate.getTime())) {
+        document.getElementById("result").innerText = "Please enter valid inputs.";
+        return;
+      }
+
+      const oversizedCharge = isOversized ? 84.48 : 0;
+      monthlyRate += oversizedCharge;
+
+      const startDay = startDate.getDate();
+      const daysInMonth = 30;
+      const prorateDays = daysInMonth - startDay + 1;
+      const proratedAmount = (monthlyRate * prorateDays) / daysInMonth;
+      const lastMonthRate = monthlyRate;
+      const taxRate = 0.18375;
+
+      const monthlyRateTaxed = Math.round(monthlyRate * (1 + taxRate));
+      const lastMonthRateTaxed = Math.round(lastMonthRate * (1 + taxRate));
+      const proratedAmountTaxed = Math.round(proratedAmount * (1 + taxRate));
+      const totalWithTax = monthlyRateTaxed + lastMonthRateTaxed + proratedAmountTaxed;
+
+      document.getElementById("result").innerHTML = `
+        <strong>Summary:</strong>
+        <table>
+          <tr><th>Description</th><th>Pre-Tax</th><th>With Tax</th></tr>
+          <tr><td>Monthly Rate</td><td>$${monthlyRate.toFixed(2)}</td><td>$${monthlyRateTaxed}</td></tr>
+          <tr><td>Last Month Rate</td><td>$${lastMonthRate.toFixed(2)}</td><td>$${lastMonthRateTaxed}</td></tr>
+          <tr><td>Prorated Amount</td><td>$${proratedAmount.toFixed(2)}</td><td>$${proratedAmountTaxed}</td></tr>
+          <tr><td>Oversized Charge</td><td>$${oversizedCharge.toFixed(2)}</td><td>${isOversized ? "$84.48" : "$0.00"}</td></tr>
+        </table>
+        <strong>Total with Tax (18.375%): $${totalWithTax}</strong>
+      `;
+    }
+  </script>
+</body>
+</html>
