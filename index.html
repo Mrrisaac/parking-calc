@@ -14,6 +14,7 @@
       padding: 20px;
       border: 1px solid #ccc;
       border-radius: 8px;
+      color: darkgreen;
     }
     label {
       display: block;
@@ -54,7 +55,7 @@
   </style>
 </head>
 <body>
-  <h2>Parking Contract Calculator</h2>
+  <h2>Glenwood Parking Contract Calculator</h2>
   <label for="monthlyRate">Monthly Rate ($):</label>
   <input type="number" id="monthlyRate" step="0.01" />
 
@@ -62,7 +63,11 @@
   <input type="date" id="startDate" />
 
   <label>
-    <input type="checkbox" id="oversized" /> Oversized Vehicle (+$84.48)
+    <input type="checkbox" id="oversized" onclick="toggleOther('oversizedPlus', this)" /> Oversized Vehicle (+$84.48)
+  </label>
+
+  <label>
+    <input type="checkbox" id="oversizedPlus" onclick="toggleOther('oversized', this)" /> Oversized Vehicle (+$105.60)
   </label>
 
   <button onclick="calculateTotal()">Calculate</button>
@@ -70,17 +75,23 @@
   <div class="result" id="result"></div>
 
   <script>
+    function toggleOther(otherId, current) {
+      const other = document.getElementById(otherId);
+      if (current.checked) other.checked = false;
+    }
+
     function calculateTotal() {
       let monthlyRate = parseFloat(document.getElementById("monthlyRate").value);
       const startDate = new Date(document.getElementById("startDate").value);
       const isOversized = document.getElementById("oversized").checked;
+      const isOversizedPlus = document.getElementById("oversizedPlus").checked;
 
       if (isNaN(monthlyRate) || isNaN(startDate.getTime())) {
         document.getElementById("result").innerText = "Please enter valid inputs.";
         return;
       }
 
-      const oversizedCharge = isOversized ? 84.48 : 0;
+      const oversizedCharge = (isOversized ? 84.48 : 0) + (isOversizedPlus ? 105.60 : 0);
       monthlyRate += oversizedCharge;
 
       const startDay = startDate.getDate();
@@ -102,7 +113,7 @@
           <tr><td>Monthly Rate</td><td>$${monthlyRate.toFixed(2)}</td><td>$${monthlyRateTaxed}</td></tr>
           <tr><td>Last Month Rate</td><td>$${lastMonthRate.toFixed(2)}</td><td>$${lastMonthRateTaxed}</td></tr>
           <tr><td>Prorated Amount</td><td>$${proratedAmount.toFixed(2)}</td><td>$${proratedAmountTaxed}</td></tr>
-          <tr><td>Oversized Charge</td><td>$${oversizedCharge.toFixed(2)}</td><td>${isOversized ? "$84.48" : "$0.00"}</td></tr>
+          <tr><td>Oversized Charges</td><td>$${oversizedCharge.toFixed(2)}</td><td>$${Math.round(oversizedCharge * (1 + taxRate))}</td></tr>
         </table>
         <strong>Total with Tax (18.375%): $${totalWithTax}</strong>
       `;
