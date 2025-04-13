@@ -56,7 +56,7 @@
 </head>
 <body>
   <h2>Glenwood Parking Contract Calculator</h2>
-  <label for="monthlyRate">Monthly Rate Before Taxes ($):</label>
+  <label for="monthlyRate">Monthly Rate Before Tax ($):</label>
   <input type="number" id="monthlyRate" step="0.01" />
 
   <label for="startDate">Start Date:</label>
@@ -111,10 +111,15 @@
       const lastMonthRate = excludeLastMonth ? 0 : monthlyRate;
       const taxRate = useReducedTax ? 0.10375 : 0.18375;
 
-      const monthlyRateTaxed = Math.round(monthlyRate * (1 + taxRate));
-      const lastMonthRateTaxed = Math.round(lastMonthRate * (1 + taxRate));
-      const proratedAmountTaxed = Math.round(proratedAmount * (1 + taxRate));
-      const totalWithTax = monthlyRateTaxed + lastMonthRateTaxed + proratedAmountTaxed;
+      const monthlyRateTaxed = Math.round(monthlyRate * (1 + taxRate)).toFixed(2);
+      const lastMonthRateTaxed = Math.round(lastMonthRate * (1 + taxRate)).toFixed(2);
+      const proratedAmountTaxed = (proratedAmount * (1 + taxRate)).toFixed(2);
+
+      const monthlyRateTaxedExact = monthlyRate * (1 + taxRate);
+      const lastMonthRateTaxedExact = lastMonthRate * (1 + taxRate);
+      const proratedAmountTaxedExact = proratedAmount * (1 + taxRate);
+
+      const totalWithTax = (monthlyRateTaxedExact + lastMonthRateTaxedExact + proratedAmountTaxedExact).toFixed(2);
 
       document.getElementById("result").innerHTML = `
         <strong>Summary:</strong>
