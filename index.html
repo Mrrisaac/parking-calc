@@ -106,19 +106,22 @@
 
       const startDay = startDate.getDate();
       const daysInMonth = 30;
-      const prorateDays = daysInMonth - startDay + 1;
+      const prorateDays = startDay === 1 ? 0 : (daysInMonth - startDay + 1);
       const proratedAmount = (monthlyRate * prorateDays) / daysInMonth;
       const lastMonthRate = excludeLastMonth ? 0 : monthlyRate;
       const taxRate = useReducedTax ? 0.10375 : 0.18375;
 
-      const monthlyRateTaxed = (monthlyRate * (1 + taxRate)).toFixed(2);
-      const proratedAmountTaxed = (proratedAmount * (1 + taxRate)).toFixed(2);
-      const lastMonthRateTaxed = (lastMonthRate * (1 + taxRate)).toFixed(2);
+      const monthlyRateTaxedRaw = monthlyRate * (1 + taxRate);
+      const monthlyRateTaxed = Math.round(monthlyRateTaxedRaw).toFixed(2);
+      const proratedAmountTaxedRaw = proratedAmount * (1 + taxRate);
+      const proratedAmountTaxed = proratedAmountTaxedRaw.toFixed(2);
+      const lastMonthRateTaxedRaw = lastMonthRate * (1 + taxRate);
+      const lastMonthRateTaxed = lastMonthRateTaxedRaw.toFixed(2);
 
       const totalWithTax = (
-        parseFloat(monthlyRateTaxed) +
-        parseFloat(proratedAmountTaxed) +
-        parseFloat(lastMonthRateTaxed)
+        monthlyRateTaxedRaw +
+        proratedAmountTaxedRaw +
+        lastMonthRateTaxedRaw
       ).toFixed(2);
 
       document.getElementById("result").innerHTML = `
