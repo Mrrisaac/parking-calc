@@ -102,21 +102,20 @@
       }
 
       const oversizedCharge = (isOversized ? 84.48 : 0) + (isOversizedPlus ? 105.60 : 0);
-      monthlyRate += oversizedCharge;
 
       const startDay = startDate.getDate();
       const daysInMonth = 30;
       const prorateDays = startDay === 1 ? 0 : (daysInMonth - startDay + 1);
-      const proratedAmount = (monthlyRate * prorateDays) / daysInMonth;
+      const proratedAmount = ((monthlyRate + oversizedCharge) * prorateDays) / daysInMonth;
       const lastMonthRate = excludeLastMonth ? 0 : monthlyRate;
       const taxRate = useReducedTax ? 0.10375 : 0.18375;
 
-      const monthlyRateTaxedRaw = monthlyRate * (1 + taxRate);
+      const monthlyRateTaxedRaw = (monthlyRate + oversizedCharge) * (1 + taxRate);
       const monthlyRateTaxed = Math.round(monthlyRateTaxedRaw).toFixed(2);
       const proratedAmountTaxedRaw = proratedAmount * (1 + taxRate);
       const proratedAmountTaxed = proratedAmountTaxedRaw.toFixed(2);
-      const lastMonthRateTaxedRaw = lastMonthRate * (1 + taxRate);
-      const lastMonthRateTaxed = lastMonthRateTaxedRaw.toFixed(2);
+      const lastMonthRateTaxedRaw = (lastMonthRate + oversizedCharge) * (1 + taxRate);
+      const lastMonthRateTaxed = Math.round(lastMonthRateTaxedRaw).toFixed(2);
 
       const totalWithTax = (
         monthlyRateTaxedRaw +
