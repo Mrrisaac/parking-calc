@@ -102,7 +102,6 @@
       }
 
       const oversizedCharge = (isOversized ? 84.48 : 0) + (isOversizedPlus ? 105.60 : 0);
-
       const startDay = startDate.getDate();
       const daysInMonth = 30;
       const prorateDays = startDay === 1 ? 0 : (daysInMonth - startDay + 1);
@@ -113,7 +112,7 @@
       const monthlyRateTaxedRaw = (monthlyRate + oversizedCharge) * (1 + taxRate);
       const monthlyRateTaxed = Math.round(monthlyRateTaxedRaw).toFixed(2);
       const proratedAmountTaxedRaw = proratedAmount * (1 + taxRate);
-      const proratedAmountTaxed = proratedAmountTaxedRaw.toFixed(2);
+      const proratedAmountTaxed = proratedAmountTaxedRaw > 0 ? proratedAmountTaxedRaw.toFixed(2) : '0.00';
       const lastMonthRateTaxedRaw = (lastMonthRate + oversizedCharge) * (1 + taxRate);
       const lastMonthRateTaxed = Math.round(lastMonthRateTaxedRaw).toFixed(2);
 
@@ -129,7 +128,7 @@
           <tr><th>Description</th><th>Pre-Tax</th><th>With Tax</th></tr>
           <tr><td>Monthly Rate</td><td>$${monthlyRate.toFixed(2)}</td><td>$${monthlyRateTaxed}</td></tr>
           <tr><td>Last Month Rate</td><td>$${lastMonthRate.toFixed(2)}</td><td>$${lastMonthRateTaxed}</td></tr>
-          <tr><td>Prorated Amount</td><td>$${proratedAmount.toFixed(2)}</td><td>$${proratedAmountTaxed}</td></tr>
+          ${prorateDays > 0 ? `<tr><td>Prorated Amount</td><td>$${proratedAmount.toFixed(2)}</td><td>$${proratedAmountTaxed}</td></tr>` : ``}
           <tr><td>Oversized Charges</td><td>$${oversizedCharge.toFixed(2)}</td><td>$${Math.round(oversizedCharge * (1 + taxRate))}</td></tr>
         </table>
         <strong>Total with Tax (${(taxRate * 100).toFixed(3)}%): $${totalWithTax}</strong>
