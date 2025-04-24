@@ -111,15 +111,15 @@
       const lastMonthRate = excludeLastMonth ? 0 : monthlyRate;
       const taxRate = useReducedTax ? 0.10375 : 0.18375;
 
-      const monthlyRateTaxed = Math.round(monthlyRate * (1 + taxRate)).toFixed(2);
-      const lastMonthRateTaxed = Math.round(lastMonthRate * (1 + taxRate)).toFixed(2);
+      const monthlyRateTaxed = (monthlyRate * (1 + taxRate)).toFixed(2);
       const proratedAmountTaxed = (proratedAmount * (1 + taxRate)).toFixed(2);
+      const lastMonthRateTaxed = (lastMonthRate * (1 + taxRate)).toFixed(2);
 
-      const monthlyRateTaxedExact = monthlyRate * (1 + taxRate);
-      const lastMonthRateTaxedExact = lastMonthRate * (1 + taxRate);
-      const proratedAmountTaxedExact = proratedAmount * (1 + taxRate);
-
-      const totalWithTax = (monthlyRateTaxedExact + lastMonthRateTaxedExact + proratedAmountTaxedExact).toFixed(2);
+      const totalWithTax = (
+        parseFloat(monthlyRateTaxed) +
+        parseFloat(proratedAmountTaxed) +
+        parseFloat(lastMonthRateTaxed)
+      ).toFixed(2);
 
       document.getElementById("result").innerHTML = `
         <strong>Summary:</strong>
