@@ -1,6 +1,6 @@
 {
-  "name": "Parking Fee Calculator",
-  "short_name": "ParkingCalc",
+  "name": "Glenwood Parking Contract Calculator",
+  "short_name": "GlenwoodCalc",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
