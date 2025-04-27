@@ -3,55 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parking Fee Calculator</title>
+  <title>Glenwood Parking Contract Calculator</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffffff" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      color: darkgreen;
-    }
-    label {
-      display: block;
-      margin-top: 15px;
-    }
-    input[type="number"], input[type="date"] {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      box-sizing: border-box;
-    }
-    input[type="checkbox"] {
-      margin-top: 10px;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-    }
-    .result {
-      margin-top: 20px;
-      padding: 10px;
-      background-color: #f9f9f9;
-      border: 1px solid #ddd;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      text-align: left;
-      padding: 8px;
-      border-bottom: 1px solid #ddd;
-    }
-    th {
-      background-color: #f2f2f2;
-    }
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; color: darkgreen; }
+    label { display: block; margin-top: 15px; }
+    input[type="number"], input[type="date"] { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+    input[type="checkbox"] { margin-top: 10px; }
+    button { margin-top: 20px; padding: 10px 20px; }
+    .result { margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }
+    th { background-color: #f2f2f2; }
   </style>
 </head>
 <body>
@@ -62,32 +26,17 @@
   <label for="startDate">Start Date:</label>
   <input type="date" id="startDate" />
 
-  <label>
-    <input type="checkbox" id="oversized" onclick="toggleOther('oversizedPlus', this)" /> Oversized Vehicle (+$84.48)
-  </label>
-
-  <label>
-    <input type="checkbox" id="oversizedPlus" onclick="toggleOther('oversized', this)" /> Oversized Vehicle (+$105.60)
-  </label>
-
-  <label>
-    <input type="checkbox" id="excludeLastMonth" /> Do not include Last Month Rate
-  </label>
-
-  <label>
-    <input type="checkbox" id="useReducedTax" /> Excel - Briar Hill Only (10.375% tax)
-  </label>
+  <label><input type="checkbox" id="oversized" onclick="toggleOther('oversizedPlus', this)" /> Oversized Vehicle (+$84.48)</label>
+  <label><input type="checkbox" id="oversizedPlus" onclick="toggleOther('oversized', this)" /> Oversized Vehicle (+$105.60)</label>
+  <label><input type="checkbox" id="excludeLastMonth" /> Do not include Last Month Rate</label>
+  <label><input type="checkbox" id="useReducedTax" /> Excel - Briar Hill Only (10.375% tax)</label>
 
   <button onclick="calculateTotal()">Calculate</button>
 
   <div class="result" id="result"></div>
 
   <script>
-    function toggleOther(otherId, current) {
-      const other = document.getElementById(otherId);
-      if (current.checked) other.checked = false;
-    }
-
+    function toggleOther(otherId, current) { const other = document.getElementById(otherId); if (current.checked) other.checked = false; }
     function calculateTotal() {
       let monthlyRate = parseFloat(document.getElementById("monthlyRate").value);
       const startDate = new Date(document.getElementById("startDate").value);
@@ -96,16 +45,12 @@
       const excludeLastMonth = document.getElementById("excludeLastMonth").checked;
       const useReducedTax = document.getElementById("useReducedTax").checked;
 
-      if (isNaN(monthlyRate) || isNaN(startDate.getTime())) {
-        document.getElementById("result").innerText = "Please enter valid inputs.";
-        return;
-      }
-
+      if (isNaN(monthlyRate) || isNaN(startDate.getTime())) { document.getElementById("result").innerText = "Please enter valid inputs."; return; }
+      
       const oversizedCharge = (isOversized ? 84.48 : 0) + (isOversizedPlus ? 105.60 : 0);
-
       const startDay = startDate.getDate();
       const daysInMonth = 30;
-            const prorateDays = startDay === 1 ? 0 : (daysInMonth - startDay + 1);
+      const prorateDays = startDay === 1 ? 0 : (daysInMonth - startDay + 1);
       const proratedAmount = ((monthlyRate + oversizedCharge) * prorateDays) / daysInMonth;
       const lastMonthRate = excludeLastMonth ? 0 : monthlyRate;
       const taxRate = useReducedTax ? 0.10375 : 0.18375;
@@ -118,9 +63,9 @@
       const lastMonthRateTaxed = Math.round(lastMonthRateTaxedRaw).toFixed(2);
 
       const totalWithTax = (
-        (startDay === 1 ? monthlyRateTaxedRaw : 0) +
-        proratedAmountTaxedRaw +
-        lastMonthRateTaxedRaw
+        parseFloat(monthlyRateTaxed) +
+        parseFloat(proratedAmountTaxed) +
+        parseFloat(lastMonthRateTaxed)
       ).toFixed(2);
 
       document.getElementById("result").innerHTML = `
