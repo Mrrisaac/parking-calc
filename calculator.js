@@ -29,6 +29,11 @@ export function calculateCharges({
   const startDay = day;
   const oversizedCharge = (isOversized ? 84.48 : 0) + (isOversizedPlus ? 105.60 : 0);
   const actualDaysInMonth = new Date(year, month, 0).getDate();
+
+  if (month < 1 || month > 12 || startDay < 1 || startDay > actualDaysInMonth) {
+    throw new Error('Invalid start date');
+  }
+
   const prorateDays = startDay === 1 ? 0 : Math.max(0, actualDaysInMonth - startDay + 1);
   const proratedAmount = ((monthlyRate + oversizedCharge) * prorateDays) / PRORATE_BASE_DAYS;
   const lastMonthRate = excludeLastMonth ? 0 : monthlyRate;
