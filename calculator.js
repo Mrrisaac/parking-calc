@@ -1,4 +1,18 @@
 const PRORATE_BASE_DAYS = 30;
+const MONTH_ABBREVIATIONS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
 
 function roundToCents(value) {
   return Math.round((value + Number.EPSILON) * 100) / 100;
@@ -36,6 +50,15 @@ export function calculateCharges({
 
   const prorateDays = startDay === 1 ? 0 : Math.max(0, actualDaysInMonth - startDay + 1);
   const proratedAmount = ((monthlyRate + oversizedCharge) * prorateDays) / PRORATE_BASE_DAYS;
+  const prorateLabel =
+    prorateDays > 0
+      ? `${prorateDays} ${prorateDays === 1 ? 'day' : 'days'} (${formatProrateWindow(
+          year,
+          month,
+          startDay,
+          actualDaysInMonth,
+        )})`
+      : '';
   const lastMonthRate = excludeLastMonth ? 0 : monthlyRate;
   const taxRate = useReducedTax ? 0.10375 : 0.18375;
 
@@ -65,6 +88,7 @@ export function calculateCharges({
     proratedAmount,
     proratedAmountShown,
     proratedAmountTaxed,
+    prorateLabel,
     oversizedCharge,
     oversizedChargeTaxed,
     lastMonthRate,
@@ -86,6 +110,24 @@ export function parseDateInput(value) {
 
   const [year, month, day] = parts;
   return { year, month, day };
+}
+
+function formatProrateWindow(year, month, startDay, actualDaysInMonth) {
+  const monthIndex = month - 1;
+  const startLabel = `${MONTH_ABBREVIATIONS[monthIndex]} ${startDay}`;
+  if (startDay === actualDaysInMonth) {
+    return startLabel;
+  }
+
+  const endDate = new Date(Date.UTC(year, monthIndex, actualDaysInMonth));
+  const endMonthIndex = endDate.getUTCMonth();
+  const endDay = endDate.getUTCDate();
+  if (endMonthIndex === monthIndex) {
+    return `${startLabel}-${endDay}`;
+  }
+
+  const endLabel = `${MONTH_ABBREVIATIONS[endMonthIndex]} ${endDay}`;
+  return `${startLabel}-${endLabel}`;
 }
 
 export { PRORATE_BASE_DAYS };

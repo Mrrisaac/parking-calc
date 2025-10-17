@@ -27,6 +27,7 @@ describe('calculateCharges', () => {
     const result = calculateCharges(baseInput);
     assert.equal(result.prorateDays, 1);
     assert.equal(result.proratedAmount.toFixed(2), '10.00');
+    assert.equal(result.prorateLabel, '1 day (Aug 31)');
   });
 
   test('charges for both the 30th and 31st days in a 31-day month', () => {
@@ -38,6 +39,7 @@ describe('calculateCharges', () => {
 
     assert.equal(result.prorateDays, 2);
     assert.equal(result.proratedAmountShown, '32.38');
+    assert.equal(result.prorateLabel, '2 days (Oct 30-31)');
   });
 
   test('uses the remaining days of the actual month when prorating', () => {
@@ -47,6 +49,7 @@ describe('calculateCharges', () => {
     });
     assert.equal(result.prorateDays, 16);
     assert.equal(result.proratedAmount.toFixed(2), '160.00');
+    assert.equal(result.prorateLabel, '16 days (Apr 15-30)');
   });
 
   test('handles first-of-month start with no prorate', () => {

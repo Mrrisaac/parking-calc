@@ -39,7 +39,7 @@ function calculateTotal() {
         <tr><td>Monthly Rate</td><td>$${summary.monthlyShownPre}</td><td>$${summary.monthlyShownTaxed}</td></tr>
         <tr><td>Last Month Rate</td><td>$${summary.lastMonthRate.toFixed(2)}</td><td>$${summary.lastMonthRateTaxed}</td></tr>
         ${summary.prorateDays > 0
-          ? `<tr><td>Prorated Amount</td><td>$${summary.proratedAmountShown}</td><td>$${summary.proratedAmountTaxed}</td></tr>`
+          ? `<tr><td>Prorated Amount (${summary.prorateLabel})</td><td>$${summary.proratedAmountShown}</td><td>$${summary.proratedAmountTaxed}</td></tr>`
           : ''}
         <tr><td>Oversized Charges</td><td>$${summary.oversizedCharge.toFixed(2)}</td><td>$${summary.oversizedChargeTaxed}</td></tr>
       </table>
