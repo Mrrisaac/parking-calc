@@ -52,3 +52,25 @@ function calculateTotal() {
 
 window.toggleOther = toggleOther;
 window.calculateTotal = calculateTotal;
+
+async function showVersionInfo() {
+  const versionEl = document.getElementById('versionInfo');
+  if (!versionEl) return;
+
+  try {
+    const response = await fetch('version.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error('Network response not ok');
+
+    const data = await response.json();
+    if (data?.version && data?.updated) {
+      versionEl.textContent = `Version ${data.version} – Updated ${data.updated}`;
+      return;
+    }
+  } catch (error) {
+    console.warn('Unable to load version info:', error);
+  }
+
+  versionEl.textContent = 'Version information is unavailable right now.';
+}
+
+showVersionInfo();

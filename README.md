@@ -30,6 +30,13 @@ By default the server listens on [http://localhost:4173](http://localhost:4173).
 
 To stop the server, press <kbd>Ctrl</kbd> + <kbd>C</kbd> in the terminal.
 
+## Version details
+
+When the calculator runs through `npm start`, the footer automatically loads `version.json` from the Node server. That endpoint
+combines the `package.json` version with the date of the latest Git commit so you can confirm you are looking at the newest 
+build. If Git metadata is unavailable, the UI falls back to the current date or shows a brief "Version information is unavailable"
+message.
+
 ## Project structure
 
 * `index.html` – The calculator form and result markup.
