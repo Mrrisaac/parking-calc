@@ -5,6 +5,7 @@ This project provides a small in-browser calculator for Glenwood parking contrac
 ## Prerequisites
 
 * [Node.js](https://nodejs.org/) 18 or newer (for the test runner and local web server)
+* Git access to the target GitHub repository (for publishing updates)
 
 ## Install dependencies
 
@@ -36,6 +37,36 @@ When the calculator runs through `npm start`, the footer automatically loads `ve
 combines the `package.json` version with the date of the latest Git commit so you can confirm you are looking at the newest 
 build. If Git metadata is unavailable, the UI falls back to the current date or shows a brief "Version information is unavailable"
 message.
+
+## How to publish an update to GitHub
+
+Use this flow whenever you want the site footer to reflect a newly published version.
+
+1. Make your code changes.
+2. Bump the app version:
+
+   ```bash
+   npm run release:patch
+   ```
+
+   This updates `package.json` from `x.y.z` to the next patch version.
+3. Run tests:
+
+   ```bash
+   npm test
+   ```
+
+4. Commit and push:
+
+   ```bash
+   git add .
+   git commit -m "Describe your calculator update"
+   git push origin <your-branch>
+   ```
+
+5. Open/merge a PR in GitHub.
+
+After merge/deploy, reload the calculator page and confirm the footer shows the new version and commit date.
 
 ## Project structure
 
