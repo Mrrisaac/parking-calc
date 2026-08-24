@@ -3,84 +3,454 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parking Fee Calculator</title>
+  <title>Glenwood Parking Fee Calculator</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="theme-color" content="#0d4d2b" />
   <style>
+    :root {
+      --green-900: #083e24;
+      --green-800: #0d4d2b;
+      --green-700: #126437;
+      --green-600: #1a7a43;
+      --green-100: #eaf4ed;
+      --green-050: #f5faf6;
+      --text: #1d2420;
+      --muted: #6d766f;
+      --line: #dce4de;
+      --card: #ffffff;
+      --bg: #f4f7f5;
+      --shadow: 0 12px 30px rgba(16, 49, 29, 0.09);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      color: darkgreen;
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #edf4ef 0, var(--bg) 220px, #f7f9f8 100%);
+      color: var(--text);
+      min-height: 100vh;
     }
-    label {
+
+    .hero {
+      background:
+        radial-gradient(circle at 85% 10%, rgba(255,255,255,0.10), transparent 30%),
+        linear-gradient(135deg, var(--green-900), var(--green-700));
+      color: white;
+      padding: 28px 20px 34px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    }
+
+    .brand-mark {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 10px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.18);
+      font-size: 29px;
+    }
+
+    .brand-name {
+      font-size: 13px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      opacity: .92;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(28px, 7vw, 44px);
+      line-height: 1.05;
+      letter-spacing: -.03em;
+    }
+
+    .hero p {
+      margin: 12px auto 0;
+      max-width: 650px;
+      color: rgba(255,255,255,.86);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .app-shell {
+      width: min(1040px, calc(100% - 24px));
+      margin: -14px auto 36px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(13,77,43,.10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-inner { padding: 22px; }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+      color: var(--green-900);
+      font-size: 20px;
+    }
+
+    .section-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--green-100);
+      color: var(--green-700);
+      display: grid;
+      place-items: center;
+      font-size: 21px;
+      flex: 0 0 auto;
+    }
+
+    .field { margin-bottom: 18px; }
+
+    label.field-label {
       display: block;
-      margin-top: 15px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 15px;
     }
+
+    .input-wrap {
+      display: flex;
+      align-items: stretch;
+      border: 1.5px solid #bcc9c0;
+      border-radius: 13px;
+      overflow: hidden;
+      background: #fff;
+      transition: border .2s, box-shadow .2s;
+    }
+
+    .input-wrap:focus-within {
+      border-color: var(--green-600);
+      box-shadow: 0 0 0 3px rgba(26,122,67,.10);
+    }
+
+    .input-prefix {
+      min-width: 52px;
+      display: grid;
+      place-items: center;
+      background: var(--green-050);
+      color: var(--green-700);
+      font-weight: 800;
+      font-size: 20px;
+      border-right: 1px solid var(--line);
+    }
+
     input[type="number"], input[type="date"] {
       width: 100%;
-      padding: 8px;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-size: 18px;
+      padding: 15px 14px;
+      min-height: 54px;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .option {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #fff;
+      cursor: pointer;
+      min-height: 58px;
+    }
+
+    .option:hover { background: var(--green-050); }
+
+    .option-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: var(--green-100);
+      color: var(--green-700);
+      font-size: 19px;
+    }
+
+    .option-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 650;
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .option input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--green-700);
+      margin: 0;
+      flex: 0 0 auto;
+    }
+
+    .option-price {
+      color: var(--green-700);
+      font-weight: 800;
+      white-space: nowrap;
+      font-size: 14px;
+    }
+
+    .calculate-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--green-900), var(--green-600));
+      color: white;
+      padding: 16px 18px;
+      min-height: 56px;
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: .02em;
+      margin-top: 18px;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(13,77,43,.18);
+    }
+
+    .calculate-btn:active { transform: translateY(1px); }
+
+    .result-empty {
+      color: var(--muted);
+      line-height: 1.55;
+      text-align: center;
+      padding: 18px 8px 8px;
+    }
+
+    .total-hero {
+      background: linear-gradient(135deg, #f0f7f2, #fbfdfb);
+      border: 1px solid #dfeae2;
+      border-radius: 16px;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .total-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #dceedd;
+      color: var(--green-700);
+      font-size: 26px;
+    }
+
+    .total-label {
+      color: var(--green-700);
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    .total-value {
+      color: var(--green-900);
+      font-size: clamp(34px, 9vw, 52px);
+      line-height: 1;
+      font-weight: 850;
+      letter-spacing: -.035em;
       margin-top: 5px;
-      box-sizing: border-box;
     }
-    input[type="checkbox"] {
-      margin-top: 10px;
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
     }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-    }
-    .result {
-      margin-top: 20px;
-      padding: 10px;
-      background-color: #f9f9f9;
-      border: 1px solid #ddd;
-    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      min-width: 420px;
+      background: white;
     }
-    th, td {
-      text-align: left;
-      padding: 8px;
-      border-bottom: 1px solid #ddd;
-    }
+
     th {
-      background-color: #f2f2f2;
+      background: var(--green-900);
+      color: white;
+      text-align: left;
+      padding: 13px 12px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    th:nth-child(2), th:nth-child(3),
+    td:nth-child(2), td:nth-child(3) { text-align: right; }
+
+    td {
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .totals-row td {
+      background: var(--green-050);
+      color: var(--green-900);
+      font-weight: 850;
+    }
+
+    .info-note {
+      margin-top: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      border: 1px solid #dfe9e1;
+      background: #f7faf8;
+      border-radius: 14px;
+      padding: 14px;
+      color: #465149;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .info-note strong { color: var(--green-800); }
+
+    footer {
+      width: min(1040px, calc(100% - 24px));
+      margin: 0 auto 26px;
+      text-align: center;
+      color: #738078;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    @media (min-width: 820px) {
+      .hero { padding: 34px 24px 46px; }
+      .app-shell { margin-top: -20px; }
+      .layout { grid-template-columns: 0.9fr 1.1fr; align-items: start; }
+      .card-inner { padding: 26px; }
+    }
+
+    @media (max-width: 520px) {
+      .hero { padding: 24px 16px 30px; }
+      .hero p { font-size: 14px; }
+      .app-shell { width: min(100% - 16px, 1040px); margin-top: -10px; }
+      .card-inner { padding: 17px; }
+      .section-title { font-size: 18px; }
+      .option { grid-template-columns: auto 1fr; }
+      .option-price { grid-column: 2; margin-top: -5px; }
+      table { min-width: 360px; }
+      th, td { padding-left: 9px; padding-right: 9px; }
     }
   </style>
 </head>
 <body>
-  <h2>Glenwood Parking Contract Calculator</h2>
-  <label for="monthlyRate">Monthly Rate Before Tax ($):</label>
-  <input type="number" id="monthlyRate" step="0.01" />
+  <header class="hero">
+    <div class="brand-mark">🏢</div>
+    <div class="brand-name">Glenwood Management</div>
+    <h1>Parking Fee Calculator</h1>
+    <p>Calculate the initial payment including prorated amount, monthly rate, and last month rate.</p>
+  </header>
 
-  <label for="startDate">Start Date:</label>
-  <input type="date" id="startDate" />
+  <main class="app-shell">
+    <div class="layout">
+      <section class="card">
+        <div class="card-inner">
+          <h2 class="section-title"><span class="section-icon">🧮</span>Inputs</h2>
 
-  <label>
-    <input type="checkbox" id="oversized" onclick="toggleOther('oversizedPlus', this)" /> Oversized Vehicle (+$84.48)
-  </label>
+          <div class="field">
+            <label class="field-label" for="monthlyRate">Monthly Rate Before Tax ($)</label>
+            <div class="input-wrap">
+              <div class="input-prefix">$</div>
+              <input type="number" id="monthlyRate" step="0.01" inputmode="decimal" placeholder="0.00" />
+            </div>
+          </div>
 
-  <label>
-    <input type="checkbox" id="oversizedPlus" onclick="toggleOther('oversized', this)" /> Oversized Vehicle (+$105.60)
-  </label>
+          <div class="field">
+            <label class="field-label" for="startDate">Start Date</label>
+            <div class="input-wrap">
+              <div class="input-prefix">📅</div>
+              <input type="date" id="startDate" />
+            </div>
+          </div>
 
-  <label>
-    <input type="checkbox" id="excludeLastMonth" /> Do not include Last Month Rate
-  </label>
+          <div class="options">
+            <label class="option">
+              <span class="option-icon">🚙</span>
+              <span class="option-main"><input type="checkbox" id="oversized" onclick="toggleOther('oversizedPlus', this)" /> Oversized Vehicle</span>
+              <span class="option-price">+$84.48</span>
+            </label>
 
-  <label>
-    <input type="checkbox" id="useReducedTax" /> Excel - Briar Hill Only (10.375% tax)
-  </label>
+            <label class="option">
+              <span class="option-icon">🚐</span>
+              <span class="option-main"><input type="checkbox" id="oversizedPlus" onclick="toggleOther('oversized', this)" /> Oversized Vehicle</span>
+              <span class="option-price">+$105.60</span>
+            </label>
 
-  <button onclick="calculateTotal()">Calculate</button>
+            <label class="option">
+              <span class="option-icon">📅</span>
+              <span class="option-main"><input type="checkbox" id="excludeLastMonth" /> Do not include Last Month Rate</span>
+              <span></span>
+            </label>
 
-  <div class="result" id="result"></div>
+            <label class="option">
+              <span class="option-icon">🏙️</span>
+              <span class="option-main"><input type="checkbox" id="useReducedTax" /> Excel - Briar Hill Only</span>
+              <span class="option-price">10.375% tax</span>
+            </label>
+          </div>
+
+          <button class="calculate-btn" onclick="calculateTotal()">🧮 &nbsp; CALCULATE</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-inner">
+          <h2 class="section-title"><span class="section-icon">📋</span>Summary</h2>
+          <div id="result" class="result-empty">Enter a monthly rate and start date, then tap Calculate.</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <strong>Glenwood Management</strong><br>
+    Parking Fee Calculator · Internal operational tool
+  </footer>
 
   <script>
     function toggleOther(otherId, current) {
@@ -88,11 +458,21 @@
       if (current.checked) other.checked = false;
     }
 
+    function money(value) {
+      return '$' + Number(value).toFixed(2);
+    }
+
     function calculateTotal() {
       let monthlyRate = parseFloat(document.getElementById("monthlyRate").value);
       const startDateStr = document.getElementById("startDate").value;
-      if (!startDateStr) { document.getElementById("result").innerText = "Please pick a start date."; return; }
-      // Parse as LOCAL date to avoid UTC timezone shifts (which caused Oct 1 to show as Sep 30 in some timezones)
+      const result = document.getElementById("result");
+
+      if (!startDateStr) {
+        result.className = 'result-empty';
+        result.innerText = "Please pick a start date.";
+        return;
+      }
+
       const [yy, mm, dd] = startDateStr.split('-').map(Number);
       const startDate = new Date(yy, mm - 1, dd);
       const isOversized = document.getElementById("oversized").checked;
@@ -101,15 +481,13 @@
       const useReducedTax = document.getElementById("useReducedTax").checked;
 
       if (isNaN(monthlyRate) || isNaN(startDate.getTime())) {
-        document.getElementById("result").innerText = "Please enter valid inputs.";
+        result.className = 'result-empty';
+        result.innerText = "Please enter valid inputs.";
         return;
       }
 
       const oversizedCharge = (isOversized ? 84.48 : 0) + (isOversizedPlus ? 105.60 : 0);
-
-      const startDay = dd; // use parsed day to avoid timezone-related off-by-one
-      // Glenwood prorating rule: always divide the monthly rate by 30,
-      // but charge for the actual number of calendar days remaining in the selected month.
+      const startDay = dd;
       const actualDaysInMonth = new Date(yy, mm, 0).getDate();
       const prorateDays = startDay === 1 ? 0 : (actualDaysInMonth - startDay + 1);
       const proratedAmount = ((monthlyRate + oversizedCharge) * prorateDays) / 30;
@@ -123,10 +501,15 @@
       const lastMonthRateTaxedRaw = (lastMonthRate + oversizedCharge) * (1 + taxRate);
       const lastMonthRateTaxed = Math.round(lastMonthRateTaxedRaw).toFixed(2);
 
-      // Business rule: Include Monthly only on the 1st OR from the 20th to end of month
       const includeMonthly = (startDay === 1) || (startDay >= 20);
       const monthlyShownPre = includeMonthly ? monthlyRate.toFixed(2) : '0.00';
       const monthlyShownTaxed = includeMonthly ? monthlyRateTaxed : '0.00';
+
+      const preTaxTotal = (
+        (includeMonthly ? monthlyRate : 0) +
+        proratedAmount +
+        lastMonthRate
+      );
 
       const totalWithTax = (
         (includeMonthly ? parseFloat(monthlyRateTaxed) : 0) +
@@ -134,16 +517,35 @@
         parseFloat(lastMonthRateTaxed)
       ).toFixed(2);
 
-      document.getElementById("result").innerHTML = `
-        <strong>Summary:</strong>
-        <table>
-          <tr><th>Description</th><th>Pre-Tax</th><th>With Tax</th></tr>
-          <tr><td>Monthly Rate</td><td>$${monthlyShownPre}</td><td>$${monthlyShownTaxed}</td></tr>
-          <tr><td>Last Month Rate</td><td>$${lastMonthRate.toFixed(2)}</td><td>$${lastMonthRateTaxed}</td></tr>
-          ${prorateDays > 0 ? `<tr><td>Prorated Amount</td><td>$${proratedAmount.toFixed(2)}</td><td>$${proratedAmountTaxed}</td></tr>` : ``}
-          <tr><td>Oversized Charges</td><td>$${oversizedCharge.toFixed(2)}</td><td>$${Math.round(oversizedCharge * (1 + taxRate))}</td></tr>
-        </table>
-        <strong>Total with Tax (${(taxRate * 100).toFixed(3)}%): $${totalWithTax}</strong>
+      result.className = '';
+      result.innerHTML = `
+        <div class="total-hero">
+          <div class="total-icon">💵</div>
+          <div>
+            <div class="total-label">Total with Tax (${(taxRate * 100).toFixed(3)}%)</div>
+            <div class="total-value">$${totalWithTax}</div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Description</th><th>Pre-Tax</th><th>With Tax</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Monthly Rate</td><td>$${monthlyShownPre}</td><td>$${monthlyShownTaxed}</td></tr>
+              <tr><td>Last Month Rate</td><td>$${lastMonthRate.toFixed(2)}</td><td>$${lastMonthRateTaxed}</td></tr>
+              ${prorateDays > 0 ? `<tr><td>Prorated Amount</td><td>$${proratedAmount.toFixed(2)}</td><td>$${proratedAmountTaxed}</td></tr>` : ``}
+              <tr><td>Oversized Charges</td><td>$${oversizedCharge.toFixed(2)}</td><td>$${Math.round(oversizedCharge * (1 + taxRate)).toFixed(2)}</td></tr>
+              <tr class="totals-row"><td>Totals</td><td>${money(preTaxTotal)}</td><td>$${totalWithTax}</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="info-note">
+          <span>ℹ️</span>
+          <div><strong>Proration:</strong> the monthly rate is always divided by 30, while the calculator charges for the actual calendar days remaining in the selected month.</div>
+        </div>
       `;
     }
   </script>
