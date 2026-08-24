@@ -108,10 +108,11 @@
       const oversizedCharge = (isOversized ? 84.48 : 0) + (isOversizedPlus ? 105.60 : 0);
 
       const startDay = dd; // use parsed day to avoid timezone-related off-by-one
-      // Use the actual number of days in the selected month (28, 29, 30, or 31)
-      const daysInMonth = new Date(yy, mm, 0).getDate();
-      const prorateDays = startDay === 1 ? 0 : (daysInMonth - startDay + 1);
-      const proratedAmount = ((monthlyRate + oversizedCharge) * prorateDays) / daysInMonth;
+      // Glenwood prorating rule: always divide the monthly rate by 30,
+      // but charge for the actual number of calendar days remaining in the selected month.
+      const actualDaysInMonth = new Date(yy, mm, 0).getDate();
+      const prorateDays = startDay === 1 ? 0 : (actualDaysInMonth - startDay + 1);
+      const proratedAmount = ((monthlyRate + oversizedCharge) * prorateDays) / 30;
       const lastMonthRate = excludeLastMonth ? 0 : monthlyRate;
       const taxRate = useReducedTax ? 0.10375 : 0.18375;
 
