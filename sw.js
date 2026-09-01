@@ -1,4 +1,4 @@
-const CACHE_NAME = 'glenwood-calc-v1';
+const CACHE_NAME = 'glenwood-calc-v2';
 const APP_ASSETS = [
   './',
   './index.html',
